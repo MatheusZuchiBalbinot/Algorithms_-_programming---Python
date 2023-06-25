@@ -21,12 +21,12 @@ exerciseStudent = []  # matriz de treinos
 # Recebe os dados para cadastrar o Student.
 def cadastreReceive():
     check_if_name_already_exist = 0
-    name = input("Insira o nome do novo Student: ")
+    name = input("Insira o nome do novo Aluno: ")
     for i in registredStudent:
         if name == i.name:
             check_if_name_already_exist += 1
     if check_if_name_already_exist == 0:
-        cpf = input(f"Insira o cpf de {name}: ")
+        cpf = input(f"Insira o CPF de {name}: ")
         if validateCPF(cpf) == True:
             email = input(f"Insira o email de {name}: ")
             if validateEmail(email) == True:
@@ -35,9 +35,9 @@ def cadastreReceive():
                 imc = calculatingIMC(weight, height)
                 studentCadastre(name, cpf, weight, height, email, imc)
                 print()
-                print(
-                    f"Nome: {registredStudent[0].name} \nCPF: {registredStudent[0].cpf} \nPeso: {registredStudent[0].weight} kg\nAltura: {registredStudent[0].height} cm\nEmail: {registredStudent[0].email} \nIMC: {registredStudent[0].imc:.2f}\nClassificação do IMC: {registredStudent[0].classingIMC} \n"
-                )
+                # print(
+                #     f"Nome: {registredStudent[0].name} \nCPF: {registredStudent[0].cpf} \nPeso: {registredStudent[0].weight} kg\nAltura: {registredStudent[0].height} cm\nEmail: {registredStudent[0].email} \nIMC: {registredStudent[0].imc:.2f}\nClassificação do IMC: {registredStudent[0].classingIMC} \n"
+                # )
                 print(f"Aluno adicionado com sucesso!")
             else:
                 print("Email inválido, tente novamente.")
@@ -94,7 +94,7 @@ def addExercise(idStudent, name, rep, weight):
     # print(exerciseStudent)
     for i in range(len(exerciseStudent[idStudent])):
         print(
-            f"Exercício: {exerciseStudent[idStudent][i].exerciseName} \nNúmero de repetições: {exerciseStudent[idStudent][i].numberRepetitions} \nPeso a ser utilizado: {exerciseStudent[idStudent][i].exerciseWeight}"
+            f"\nExercício: {exerciseStudent[idStudent][i].exerciseName} \nNúmero de repetições: {exerciseStudent[idStudent][i].numberRepetitions} \nPeso a ser utilizado: {exerciseStudent[idStudent][i].exerciseWeight}"
         )  # novo exercício no treino do respectivo Student
     print("Exercício adicionado!")
 
@@ -154,33 +154,35 @@ def viewStudent():
     idStudent = searchStudentID(search_by_name)
     for i in range(len(registredStudent)):
         if search_by_name in registredStudent[i].name:
+
+            print()
+            print("Dados do Aluno: ")
+            print(f"Nome: {registredStudent[i].name} \nCPF: {registredStudent[i].cpf} \nPeso: {registredStudent[i].weight} kg \nAltura: {registredStudent[i].height} cm\nEmail: {registredStudent[i].email} \nIMC: {registredStudent[i].imc:.2f}\nClassificação do IMC: {registredStudent[i].classingIMC} \n")
+            print(" Status:", "Ativo" if registredStudent[i].status == True else "Inativo")
+            print()
+
             if exerciseStudent[i] != []:
-                print()
-                print("Dados do Aluno: ")
-                print(f"Nome: {registredStudent[0].name} \nCPF: {registredStudent[0].cpf} \nPeso: {registredStudent[0].weight} kg \nAltura: {registredStudent[0].height} cm\nEmail: {registredStudent[0].email} \nIMC: {registredStudent[0].imc:.2f}\nClassificação do IMC: {registredStudent[0].classingIMC} \n")
-                print(" Status:", "Ativo" if registredStudent[i].status == True else "Inativo")
-                print()
                 print(f"Treino de {registredStudent[i].name}: ")
                 for j in exerciseStudent[idStudent]:
                     print(
-                        f"Nome do Exercício: {j.exerciseName}\n Número de Repetições: {j.numberRepetitions}\n Peso do Exercício: {j.exerciseWeight} kg")
+                        f"Nome do Exercício: {j.exerciseName}\nNúmero de Repetições: {j.numberRepetitions}\nPeso do Exercício: {j.exerciseWeight} kg\n")
             else:
-                print(f"O aluno {search_by_name} não tem um exercício registrado")
+                print(f"O aluno {search_by_name} ainda não tem um exercício registrado")
         else:
             print(f"O aluno {search_by_name} não está registrado ")
 
 # Atualiza os dados de um Student a partir de seu Id.
-def atualizarDados(idStudent):
+def updateData(idStudent):
     print("Se você inserir 0 o elemento previamente cadastrado se manterá!")
 
     new_name = input(
         f"O nome atualmente cadastrado é: {registredStudent[idStudent].name}. O que você deseja inserir no lugar?\n")
     new_cpf = input(
         f"O CPF atualmente cadastrado é: {registredStudent[idStudent].cpf}. O que você deseja inserir no lugar?\n")
-    new_weight = input(
-        f"O peso atualmente cadastrado é: {registredStudent[idStudent].weight}. O que você deseja inserir no lugar?\n")
-    new_height = input(
-        f"A altura atualmente cadastrado é: {registredStudent[idStudent].height}. O que você deseja inserir no lugar?\n")
+    new_weight = float(input(
+        f"O peso atualmente cadastrado é: {registredStudent[idStudent].weight}. O que você deseja inserir no lugar?\n"))
+    new_height = int(input(
+        f"A altura atualmente cadastrada é: {registredStudent[idStudent].height}. O que você deseja inserir no lugar?\n"))
     new_email = input(
         f"O email atualmente cadastrado é: {registredStudent[idStudent].email}. O que você deseja inserir no lugar?\n")
 
@@ -190,25 +192,24 @@ def atualizarDados(idStudent):
     if new_cpf != "0":
         if (validateCPF(new_cpf) == True):
             registredStudent[idStudent].cpf = new_cpf
-        else:
-            print("CPF inválido!!")
+            if new_email != "0":
+                if validateEmail(new_email) == True:
+                    registredStudent[idStudent].email = new_email
+                    if new_weight != 0:
+                        registredStudent[idStudent].weight = new_weight
+                        weight_change = True
 
-    if new_weight != "0":
-        registredStudent[idStudent].weight = new_weight
-        weight_change = True
-
-    if new_height != "0":
-        registredStudent[idStudent].height = new_height
-        height_change = True
-    
-    if height_change == True or weight_change == True or height_change == True and weight_change == True:
-        registredStudent[idStudent].imc = calculatingIMC(registredStudent[idStudent].weight, registredStudent[idStudent].height)
-
-    if new_email != "0":
-        if validateEmail(new_email) == True:
-            registredStudent[idStudent].email = new_email
-        else:
-            print("Email inválido!!")
+                    if new_height != 0:
+                        registredStudent[idStudent].height = new_height
+                        height_change = True
+                    
+                    if height_change == True or weight_change == True or height_change == True and weight_change == True:
+                        registredStudent[idStudent].imc = calculatingIMC(registredStudent[idStudent].weight, registredStudent[idStudent].height)
+                
+                    print("Dados atualizados com sucesso!!")
+                else:
+                    print("Email inválido!!")
+                    mainMenu()
 
 # Exclui um Student.
 def deleteStudent():
@@ -226,63 +227,77 @@ def deleteStudent():
 # Exibe o relatório de todos os Students.
 def reportStudents():
     report_view = input(
-        "Escolha que alunos deseja ver: \n1. Todos os alunos\n 2. Apenas alunos ativos\n 3. Apenas alunos inativos\n"
+        "Escolha que alunos deseja ver: \n1. Todos os alunos\n2. Apenas alunos ativos\n3. Apenas alunos inativos\n"
     )
     match report_view:
         case "1":
             for i in range(len(registredStudent)):
                 print()
                 print("Dados do Aluno ")
-                print(f"Nome: {registredStudent[0].name} \nCPF: {registredStudent[0].cpf}\nPeso: {registredStudent[0].weight} kg\nAltura: {registredStudent[0].height} cm\nEmail: {registredStudent[0].email} \nIMC: {registredStudent[0].imc:.2f}\nClassificação do IMC: {registredStudent[0].classingIMC} \n")
+                print(f"Nome: {registredStudent[i].name} \nCPF: {registredStudent[i].cpf}\nPeso: {registredStudent[i].weight} kg\nAltura: {registredStudent[i].height} cm\nEmail: {registredStudent[i].email} \nIMC: {registredStudent[i].imc:.2f}\nClassificação do IMC: {registredStudent[i].classingIMC} \n")
                 print(" Status:", "Ativo" if registredStudent[i].status == True else "Inativo")
         case "2":
             for i in range(len(registredStudent)):
                 if registredStudent[i].status == True:
                     print()
                     print("Dados do Aluno Ativo: ")
-                    print(f"Nome: {registredStudent[0].name} \nCPF: {registredStudent[0].cpf}\nPeso: {registredStudent[0].weight} kg\nAltura: {registredStudent[0].height} cm\nEmail: {registredStudent[0].email} \nIMC: {registredStudent[0].imc:.2f}\nClassificação do IMC: {registredStudent[0].classingIMC} \n")
+                    print(f"Nome: {registredStudent[i].name} \nCPF: {registredStudent[i].cpf}\nPeso: {registredStudent[i].weight} kg\nAltura: {registredStudent[i].height} cm\nEmail: {registredStudent[i].email} \nIMC: {registredStudent[i].imc:.2f}\nClassificação do IMC: {registredStudent[i].classingIMC} \n")
+                else:
+                    print("Dentre os Alunos, atualmente nenhum está Ativo")
         case "3":
             for i in range(len(registredStudent)):
                 if registredStudent[i].status == False:
                     print()
                     print("Dados do Aluno Inativo: ")
-                    print(f"Nome: {registredStudent[0].name} \nCPF: {registredStudent[0].cpf}\nPeso: {registredStudent[0].weight} kg\nAltura: {registredStudent[0].height} cm\nEmail: {registredStudent[0].email} \nIMC: {registredStudent[0].imc:.2f}\nClassificação do IMC: {registredStudent[0].classingIMC} \n")
+                    print(f"Nome: {registredStudent[i].name} \nCPF: {registredStudent[i].cpf}\nPeso: {registredStudent[i].weight} kg\nAltura: {registredStudent[i].height} cm\nEmail: {registredStudent[i].email} \nIMC: {registredStudent[i].imc:.2f}\nClassificação do IMC: {registredStudent[i].classingIMC} \n")
+                else:
+                    print("Dentre os Alunos, atualmente nenhum está Inativo")
+
 
 # Menu principal
 def mainMenu():
-    print("Bem vindo ao sistema")
-    menu = int(input("Qual operação deseja realizar? \n 1. Cadastrar aluno. \n 2. Gerenciar treino. \n 3. Consultar aluno. \n 4. Atualizar cadastro do aluno. \n 5. Excluir aluno. \n 6. Relatório de aluno. \n 7. Sair \n"))
-    if menu == 1:
-        print()
-        cadastreReceive()
-        return True
-    elif menu == 2:
-        print()
-        menuManage()
-        return True
-    elif menu == 3:
-        print()
-        viewStudent()
-        return True
-    elif menu == 4:
-        print()
-        nameStudent = input("Insira o nome do aluno que desejais ver os dados: ")
-        idStudent = searchStudentID(nameStudent)
-        atualizarDados(idStudent)
-        return True
-    elif menu == 5:
-        print()
-        deleteStudent()
-        return True
-    elif menu == 6:
-        print()
-        reportStudents()
-        return True
-    elif menu == 7:
-        return False
+    openMenu = int(input("Desejais iniciar o Menu?\n1. Sim\n2. Não \n"))
+    if openMenu == 1:
+        print("Bem vindo ao sistema")
+        menu = int(input("Qual operação deseja realizar? \n 1. Cadastrar aluno. \n 2. Gerenciar treino. \n 3. Consultar alunos. \n 4. Atualizar cadastro do aluno. \n 5. Excluir aluno. \n 6. Relatório de aluno. \n 7. Sair \n"))
+        if menu == 1:
+            print()
+            cadastreReceive()
+            return True
+        if menu == 7:
+            return False
+        if registredStudent != []:
+            if menu == 2:
+                print()
+                menuManage()
+                return True
+            elif menu == 3:
+                print()
+                viewStudent()
+                return True
+            elif menu == 4:
+                print()
+                nameStudent = input("Insira o nome do aluno que desejais ver os dados: ")
+                idStudent = searchStudentID(nameStudent)
+                updateData(idStudent)
+                return True
+            elif menu == 5:
+                print()
+                deleteStudent()
+                return True
+            elif menu == 6:
+                print()
+                reportStudents()
+                return True
+            else:
+                print("\nPor favor, digite um número válido!")
+                return True
+        else:
+            print("Não há nenhum aluno Cadastrado, por favor, antes de tentar qualquer uma dessas operações, cadastre um aluno!!")
+            mainMenu()
     else:
-        print("\nPor favor, digite um número válido!")
-        return True
+        openMenu = int(input("Desejais iniciar o Menu?\n1. Sim\n2. Não\n"))
+        mainMenu()
 
 # Menu Gerenciar Treino
 def menuManage():
@@ -321,6 +336,18 @@ def menuManage():
             print("Por favor digite um número válido.")
     else:
         print("Aluno não encontrado.")
+
+# def showStudents():
+#     if registredStudent == []:
+#         print("Não há, atualmente, nenhum aluno cadastrado!!")
+        
+#     else:
+#         print(f"Os alunos atualmente Cadastrados são: {len(registredStudent)}")
+#         for i in range(len(registredStudent)):
+#             print(f"Aluno {i}: {registredStudent[i].name}")
+
+# def showStudentExercises(idStudent):
+    
 
 #                                      Funções para validar CPF e Email, e funções 
 #                                           para cálculo e classificação de IMC 
