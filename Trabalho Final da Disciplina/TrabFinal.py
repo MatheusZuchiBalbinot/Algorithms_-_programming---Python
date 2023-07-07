@@ -1,3 +1,4 @@
+# Se refere a um trabalho desenvolvido em Python simulando o comportamento de um software que lida com a manipulação de alunos e treinos de uma academia.
 # Classe dos Students
 class Student:
     name = None
